@@ -1,119 +1,36 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Viewer</title>
+</head>
 
-<div id="viewer">
-    <div id="currentPage"></div>
-    <div id="nextPage"></div>
-</div>
+<body style="
+    margin:0;
+    padding:0;
+    overflow-y: scroll;
+">
 
-<script>
-let page = 1;
-const maxPages = 7;
-let animating = false;
+    <img src="page1.png" style="
+        width:100vw;
+        height:100vh;
+        object-fit: contain;
+        display:block;
+    ">
 
-const viewer = document.getElementById("viewer");
-const currentPage = document.getElementById("currentPage");
-const nextPage = document.getElementById("nextPage");
+    <img src="page2.png" style="
+        width:100vw;
+        height:100vh;
+        object-fit: contain;
+        display:block;
+    ">
 
-/* ---------- INLINE STYLES (NO CSS FILE) ---------- */
-viewer.style.position = "relative";
-viewer.style.width = "100vw";
-viewer.style.height = "100vh";
-viewer.style.overflow = "hidden";
-
-[currentPage, nextPage].forEach(el => {
-    el.style.position = "absolute";
-    el.style.top = "0";
-    el.style.left = "0";
-    el.style.width = "100%";
-    el.style.height = "100%";
-    el.style.backgroundSize = "cover";
-    el.style.backgroundPosition = "center";
-    el.style.transition = "transform 0.8s ease";
-});
-
-/* ---------- FUNCTIONS ---------- */
-function setPage(el, num) {
-    el.style.backgroundImage = `url('page${num}.png')`;
-}
-
-/* initial state */
-setPage(currentPage, page);
-currentPage.style.transform = "translateX(0)";
-nextPage.style.transform = "translateX(100%)";
-
-/* ---------- NEXT ---------- */
-function next() {
-    if (animating) return;
-    animating = true;
-
-    let nextNum = page + 1 > maxPages ? 1 : page + 1;
-    setPage(nextPage, nextNum);
-
-    nextPage.style.transform = "translateX(100%)";
-
-    requestAnimationFrame(() => {
-        currentPage.style.transform = "translateX(-100%)";
-        nextPage.style.transform = "translateX(0)";
-    });
-
-    setTimeout(() => {
-        page = nextNum;
-        setPage(currentPage, page);
-        currentPage.style.transform = "translateX(0)";
-        animating = false;
-    }, 800);
-}
-
-/* ---------- PREVIOUS ---------- */
-function prev() {
-    if (animating) return;
-    animating = true;
-
-    let prevNum = page - 1 < 1 ? maxPages : page - 1;
-    setPage(nextPage, prevNum);
-
-    nextPage.style.transform = "translateX(-100%)";
-
-    requestAnimationFrame(() => {
-        currentPage.style.transform = "translateX(100%)";
-        nextPage.style.transform = "translateX(0)";
-    });
-
-    setTimeout(() => {
-        page = prevNum;
-        setPage(currentPage, page);
-        currentPage.style.transform = "translateX(0)";
-        animating = false;
-    }, 800);
-}
-
-/* ---------- SCROLL ---------- */
-viewer.addEventListener("wheel", e => {
-    e.preventDefault();
-    if (animating) return;
-    e.deltaY > 0 ? next() : prev();
-}, { passive: false });
-
-/* ---------- TOUCH ---------- */
-let startX = 0;
-viewer.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-}, { passive: true });
-
-viewer.addEventListener("touchend", e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) < 40) return;
-    dx > 0 ? prev() : next();
-}, { passive: true });
-
-/* ---------- CLICK ---------- */
-viewer.addEventListener("click", e => {
-    const x = e.clientX / window.innerWidth;
-    x < 0.5 ? prev() : next();
-});
-</script>
+    <img src="page1.png" style="
+        width:100vw;
+        height:100vh;
+        object-fit: contain;
+        display:block;
+    ">
 
 </body>
 </html>
